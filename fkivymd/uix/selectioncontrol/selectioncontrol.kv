@@ -1,0 +1,24 @@
+<FCheckbox>
+    _current_color:
+        ( \
+        ( \
+        self.theme_cls.primaryColor \
+        if not self.color_active else self.color_active \
+        ) \
+        if self.active else \
+        ( \
+        self.theme_cls.onSurfaceVariantColor \
+        if not self.color_inactive else self.color_inactive \
+        ) \
+        ) \
+        if not self.disabled else \
+        ( \
+        self.theme_cls.onSurfaceColor[:-1] + [0.38] \
+        if not self.color_disabled else self.color_disabled \
+        )
+    theme_icon_color: 'Custom'
+    icon_color: self._current_color
+    halign: "center"
+    valign: "middle"
+    size_hint: None, None
+    size: "22dp", "22dp"

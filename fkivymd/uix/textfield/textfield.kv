@@ -1,0 +1,483 @@
+#:import md_icons kivymd.icon_definitions.md_icons
+#:import theme_font_styles kivymd.font_definitions.theme_font_styles
+
+<FTextField>
+    fill_color: self.theme_cls.surfaceVariantColor
+    fill_color_focus: self.theme_cls.surfaceVariantColor
+    text_color: self.theme_cls.onSurfaceVariantColor
+    text_color_focus: self.theme_cls.onSurfaceColor
+    text_color_disabled: self.theme_cls.disabled_hint_text_color
+    leading_icon_color: self.theme_cls.onSurfaceVariantColor
+    leading_icon_color_focus: self.theme_cls.onSurfaceVariantColor
+    button_icon_color: self.theme_cls.onSurfaceVariantColor
+    button_icon_color_focus: self.theme_cls.onSurfaceVariantColor
+    trailing_icon_color: self.theme_cls.onSurfaceVariantColor
+    trailing_icon_color_focus: self.theme_cls.onSurfaceVariantColor
+    border_color: self.theme_cls.outlineColor
+    border_color_focus: self.theme_cls.primaryColor
+    line_color: self.theme_cls.onSurfaceVariantColor
+    line_color_focus: self.theme_cls.primaryColor
+    helper_text_color: self.theme_cls.onSurfaceVariantColor
+    helper_text_color_focus: self.theme_cls.onSurfaceVariantColor
+    max_length_color: self.theme_cls.onSurfaceVariantColor
+    max_length_color_focus: self.theme_cls.onSurfaceVariantColor
+    cursor_color: self.theme_cls.primaryColor
+    hint_text_color:
+        self.theme_cls.onSurfaceVariantColor[:-1] + ( \
+        [1] if self.text else [.5])
+    hint_text_color_focus: self.theme_cls.primaryColor
+    hint_text_color_disabled: self.theme_cls.disabled_hint_text_color
+    selection_color: self.theme_cls.primaryContainerColor[:-1] + [.5]
+
+    radius: [dp(4)]
+    text:
+        self.text[:self.max_length] \
+        if self.max_length else \
+        self.text
+    font_name: theme_font_styles[self.font_style][self.role]["font-name"]
+    font_size: theme_font_styles[self.font_style][self.role]["font-size"]
+    line_spacing: 2
+
+    _outline_thickness: dp(1.25) if self.focus else dp(1)
+    _outlined_reduce_height: dp(8) if self.style =='outlined' and self.keep_hint_visible else 0
+    _filled_pad_downside: dp(7) if self.style != 'outlined' and self.keep_hint_visible else 0
+    _top_left_line_pos: self.x + self.width / 2
+    _top_right_line_pos: self.x + self.width / 2
+
+    padding:
+        [
+        (dp(5) + self._leading_button_container.width) \
+        if self._leading_buttons else \
+        (dp(45) if self.leading_icon else self._component_padding), \
+
+        dp(19) + self._filled_pad_downside \
+        + self._outlined_reduce_height, \
+
+        (dp(5) + self._trailing_button_container.width) \
+        if self._trailing_buttons else \
+        (dp(50) if self.trailing_icon else self._component_padding), \
+
+        self._component_padding - self._filled_pad_downside + \
+        (dp(15) if self.helper_text or \
+        self.max_length else 0) \
+        ]
+    _bbox:
+        [self.x, 
+        self.y + (self.padding[3] - dp(15)
+        if self.helper_text or self.max_length else 0), 
+        self.x + self.width, 
+        self.y + self.height - self._outlined_reduce_height
+        ]
+    size_hint_min_y: self.minimum_height
+    hint_text_label: hint_text_label.__self__
+    leading_icon_label: leading_icon_label.__self__
+    trailing_icon_label: trailing_icon_label.__self__
+    helper_text_label: helper_text_label.__self__
+    max_length_label: max_length_label.__self__
+    
+    canvas.before:
+        Clear
+        # Filled mode
+        Color:
+            rgba:
+                ( \
+                (self.fill_color_focus \
+                if self.focus else \
+                self.fill_color) \
+                if self.style == "filled" else \
+                self.theme_cls.transparentColor \
+                ) or [0, 0, 0, 0]
+        RoundedRectangle:
+            size: 
+                [0, 0] if self.style != 'filled' else \
+                [self.width, \
+                self.height - (self.padding[3] + self._filled_pad_downside - self._component_padding \
+                if self.helper_text or self.max_length else 0)]
+            pos:
+                [0, 0] if self.style != 'filled' else \
+                [self.x, \
+                self.y + (self.padding[3] + self._filled_pad_downside - self._component_padding \
+                if self.helper_text or self.max_length else 0)]
+            radius: root.radius[0], root.radius[1], 0, 0
+            
+        # Active indicator
+        Color:
+            rgba:
+                ( \
+                (self.line_color_focus \
+                if self.focus else \
+                self.line_color) \
+                if self.style == "filled" else \
+                self.theme_cls.transparentColor \
+                ) or [0, 0, 0, 0]
+        Line:
+            width: self._outline_thickness
+            points:
+                [0, 0] if self.style != 'filled' else \
+                [self.x + dp(1 if self.focus else 0), \
+                self.y + (self.padding[3] + self._filled_pad_downside 
+                - self._component_padding if self.helper_text \
+                or self.max_length else 0), \
+                self.x + self.width - dp(1 if self.focus else 0), \
+                self.y + (self.padding[3] + self._filled_pad_downside \
+                - self._component_padding \
+                if self.helper_text or self.max_length else 0)]
+
+        # UnderLine (line style)
+        Color:
+            group: 'line-style-line-color'
+            rgba:
+                ((self._under_line_color \
+                if hasattr(self, '_line') else \
+                ((self.line_color[:-1] + [.3] \
+                if self.line_color \
+                else [0,0,0,0]) \
+                if not self.focus else \
+                self.line_color_focus)) \
+                if self.style == "line" else \
+                self.theme_cls.transparentColor \
+                ) or [0, 0, 0, 0]
+        Line:
+            group: 'line-style-line'
+            width: dp(1)
+            points:
+                [0, 0] if self.style != 'line' else \
+                [self.x + dp(1 if self.focus else 0), \
+                self.y + dp(3) + (self.padding[3] + self._filled_pad_downside 
+                - self._component_padding if self.helper_text \
+                or self.max_length else 0), \
+                self.x + self.width - dp(1 if self.focus else 0), \
+                self.y + dp(3) + (self.padding[3] + self._filled_pad_downside \
+                - self._component_padding \
+                if self.helper_text or self.max_length else 0)]
+
+        # Border
+        Color:
+            rgba:
+                ( \
+                (self.border_color_focus \
+                if self.focus else \
+                self.border_color) \
+                if self.style == "outlined" else \
+                self.theme_cls.transparentColor \
+                ) or [0, 0, 0, 0]
+
+        # Top right corner (─╮)
+        SmoothLine:
+            width: self._outline_thickness
+            circle:
+                [0, 0, 0, 0, 0] if self.style != 'outlined' else \
+                [self._bbox[2] - self.radius[1], \
+                self._bbox[3] - self.radius[1], \
+                self.radius[1], \
+                0, \
+                90]
+
+        # Bottom corner (─╯)
+        SmoothLine:
+            width: self._outline_thickness
+            circle:
+                [0, 0, 0, 0, 0] if self.style != 'outlined' else \
+                [self._bbox[2] - self.radius[2], \
+                self._bbox[1] + self.radius[2], \
+                -self.radius[2], \
+                0, \
+                -90]
+
+        # Top left corner (╭─)
+        SmoothLine:
+            width: self._outline_thickness
+            circle:
+                [0, 0, 0, 0, 0] if self.style != 'outlined' else \
+                [self._bbox[0] + self.radius[0], \
+                self._bbox[3] - self.radius[0], \
+                -self.radius[0], \
+                180, \
+                90]
+
+        # Bottom left corner (╰─)
+        SmoothLine:
+            width: self._outline_thickness
+            circle:
+                [0, 0, 0, 0, 0] if self.style != 'outlined' else \
+                [self._bbox[0] + self.radius[3], \
+                self._bbox[1] + self.radius[3], \
+                -self.radius[3], \
+                0, \
+                90]
+
+        # Left vertical line
+        SmoothLine:
+            width: self._outline_thickness
+            points:
+                [0, 0, 0, 0] if self.style != 'outlined' else \
+                [self._bbox[0], \
+                self._bbox[1] + self.radius[3], \
+                self._bbox[0], \
+                self._bbox[3] - self.radius[0]]
+
+        # Right vertical line
+        SmoothLine:
+            width: self._outline_thickness
+            points:
+                [0, 0, 0, 0] if self.style != 'outlined' else \
+                [self._bbox[2], \
+                self._bbox[1] + self.radius[2], \
+                self._bbox[2], \
+                self._bbox[3] - self.radius[1]]
+
+        # Bottom horizontal line
+        SmoothLine:
+            width: self._outline_thickness
+            points:
+                [0, 0, 0, 0] if self.style != 'outlined' else \
+                [self._bbox[0] + self.radius[3], \
+                self._bbox[1], \
+                self._bbox[2] - self.radius[2], \
+                self._bbox[1]]
+
+        # Top (left) part of the line
+        SmoothLine:
+            width: self._outline_thickness
+            points:
+                [0, 0, 0, 0] if self.style != 'outlined' else \
+                [self._bbox[0] + self.radius[0], \
+                self._bbox[3], \
+                self._top_left_line_pos, \
+                self._bbox[3]]
+
+        # Top (right) part of the line
+        SmoothLine:
+            width: self._outline_thickness
+            points:
+                [0, 0, 0, 0] if self.style != 'outlined' else \
+                [self._bbox[2] - self.radius[1], \
+                self._bbox[3], \
+                self._top_right_line_pos, \
+                self._bbox[3]]
+
+        # --------------------------Children--------------------------------
+        # Leading Icon
+        Color:
+            rgba: 
+                (self.leading_icon_color \
+                if not self.focus else \
+                self.leading_icon_color_focus) \
+                or [1,0,0,0]
+        Rectangle:
+            texture: self.leading_icon_label and self.leading_icon_label.texture
+            size: self.leading_icon_label.texture_size if self.leading_icon_label else [0,0]
+            pos:
+                (self.x + self._component_padding, \
+                self._bbox[3] - self._component_padding \
+                - self.leading_icon_label.texture_size[1]) \
+                if self.leading_icon_label else [0,0]
+
+        # Divider
+        Color:
+            rgba:
+                self.theme_cls.outlineColor[:-1] + [.65] \
+                if ((self.trailing_icon or \
+                (len(self._trailing_buttons) \
+                if self._trailing_button_container else False)) and \
+                self.button_divider and \
+                self.theme_cls.outlineColor) \
+                else [0,0,0,0]
+        Rectangle:
+            size: 1, dp(25)
+            pos: 
+                self._bbox[2] - (len(self._trailing_buttons)*dp(40) \
+                + self._component_padding \
+                if self._trailing_buttons else \
+                (dp(40) + self._component_padding \
+                if self.trailing_icon else 0)), \
+                self._bbox[3] - dp(25) - self._component_padding
+
+        # Trailing Icon
+        Color:
+            rgba: 
+                (self.trailing_icon_color \
+                if not self.focus else \
+                self.trailing_icon_color_focus) \
+                or [1,0,0,0]
+        Rectangle:
+            texture:
+                self.trailing_icon_label and \
+                self.trailing_icon_label.texture
+            size:
+                self.trailing_icon_label.texture_size \
+                if self.trailing_icon_label else [0,0]
+            pos:
+                (self._bbox[2] - self.trailing_icon_label.texture_size[0] \
+                - self._component_padding, self._bbox[3] - self._component_padding \
+                - self.trailing_icon_label.texture_size[1]) \
+                if self.trailing_icon_label else [0,0]
+
+        # Helper Text
+        Color:
+            rgba: 
+                ((self.helper_text_color \
+                if self.helper_text_style == 'persistent' \
+                else [0, 0, 0, 0]) \
+                if not self.focus else \
+                self.helper_text_color_focus) \
+                or [0, 0, 0, 0]
+        Rectangle:
+            texture: self.helper_text_label and self.helper_text_label.texture
+            size: self.helper_text_label.texture_size if self.helper_text_label else [0,0]
+            pos:
+                (self._bbox[0] + dp(5), self.y) \
+                if self.helper_text_label else [0,0]
+
+        # Max Length
+        Color:
+            rgba: 
+                (self.max_length_color \
+                if not self.focus else \
+                self.max_length_color_focus) \
+                or [1,0,0,0]
+        Rectangle:
+            texture:
+                (self.text or self.max_length_label) \
+                and self.max_length_label.texture
+            size: 
+                ((self.text or self.max_length_label) \
+                and self.max_length_label.texture_size) or [0,0]
+            pos:
+                (self._bbox[2] - self.max_length_label.texture_size[0] \
+                - dp(5), self.y) \
+                if ((self.text or self.max_length_label) \
+                and self.max_length_label.texture_size) else [0,0]
+                
+        # Cursor
+        Color:
+            rgba:
+                (self.cursor_color
+                if self.focus and not self._cursor_blink
+                and (int(self.x + self.padding[0]) <= self._cursor_visual_pos[0] 
+                <= int(self.x + self.width - self.padding[2]))
+                else (0, 0, 0, 0))
+        Rectangle:
+            pos: self._cursor_visual_pos
+            size: self.cursor_width, -self._cursor_visual_height
+            
+        # Text
+        Color:
+            group: 'text-color'
+            rgba:
+                ( \
+                self.text_color_disabled \
+                if self.disabled else \
+                (self.hint_text_color \
+                if not self.text else \
+                (self.text_color_focus \
+                if self.focus else \
+                self.text_color)) \
+                ) or [0, 0, 0, 0]
+
+    canvas.after:
+        Color:
+            rgba: [1,1,1,1]
+        Rectangle:
+            group: "hint-text-rectangle"
+            texture:
+                self.hint_text_label.texture \
+                if self.hint_text_label else \
+                None
+            size:
+                self.hint_text_label.texture_size \
+                if self.hint_text_label else \
+                (0, 0)
+            pos: [0,0]
+        Color:
+            rgba: 1,0,0,1
+
+    FLabel:
+        id: hint_text_label
+        text: root._extracted_hint_text
+        size_hint: None, None
+        size: self.texture_size
+        theme_font_size: 'Custom'
+        font_size:
+            theme_font_styles['Body']['small']['font-size'] \
+            if root.text or root.focus else root.font_size
+        text_color:
+            (root.hint_text_color \
+            if not root.focus else \
+            root.hint_text_color_focus) \
+            if not root.disabled else \
+            root.hint_text_color_disabled
+
+    TextFieldLabel:
+        id: leading_icon_label
+        icon: root.leading_icon
+        font_style: 'Icon'
+        role: 'large'
+        text:
+            ( \
+            u"{}".format(md_icons[self.icon]) \
+            if self.icon in md_icons else \
+            "blank" \
+            ) \
+            if self.font_name == "Icons" else self.icon
+    
+    TextFieldLabel:
+        id: trailing_icon_label
+        icon: root.trailing_icon
+        font_style: 'Icon'
+        role: 'large'
+        text:
+            ( \
+            u"{}".format(md_icons[self.icon]) \
+            if self.icon in md_icons else \
+            "blank" \
+            ) \
+            if self.font_name == "Icons" else self.icon
+    
+    TextFieldLabel:
+        id: helper_text_label
+        text: root.helper_text
+        font_style: 'Body'
+        role: 'small'
+        
+    TextFieldLabel:
+        id: max_length_label
+        text:
+            f"{len(root.text)}/{root.max_length}" \
+            if root.max_length else ''
+        font_style: 'Body'
+        role: 'small'
+
+<TextFieldLabel@Label>
+    font_style: 'Body'
+    role: 'large'
+    font_name: theme_font_styles[self.font_style][self.role]["font-name"]
+    font_size: theme_font_styles[self.font_style][self.role]["font-size"]
+
+<FTextFieldButton>
+    theme_icon_color: 'Custom'
+    icon_color:
+        ((self._parent.button_icon_color \
+        if not self._parent.focus \
+        else self._parent.button_icon_color_focus) \
+        if self._parent and self._parent else \
+        self.theme_cls.transparentColor)
+    ripple_effect: True
+    ripple_color: [.6,.6,.6, 1]
+    radius:
+        self._parent.button_radius if self._parent \
+        and any(self._parent.button_radius) else [self.height/2]
+    opacity:
+        self._parent.opacity \
+        if self._parent else 0
+    disabled: self._parent.disabled if self._parent else True
+
+<FTextFieldLeadingButtonContainer>
+    size_hint: None, None
+    padding: [dp(7.5), dp(7.5), dp(3), dp(7.5)]
+    size: self.minimum_size
+
+<FTextFieldTrailingButtonContainer>
+    size_hint: None, None
+    padding: [dp(3), dp(7.5), dp(7.5), dp(7.5)]
+    size: self.minimum_size

@@ -1,0 +1,74 @@
+#:import md_icons kivymd.icon_definitions.md_icons
+
+<FLabel>
+    state_effect: False
+    font_size:
+        self.theme_cls.font_styles[self.font_style][self.role]["font-size"] \
+        if self.theme_font_size == "Primary" else self.font_size
+    font_name:
+        self.theme_cls.font_styles[self.font_style][self.role]["font-name"] \
+        if self.theme_font_name == "Primary" else self.font_name
+
+    color: 
+        self.text_color \
+        if self.theme_text_color == "Custom" \
+        and self.text_color else \
+        self.theme_cls.onSurfaceColor
+    disabled_color: 
+        self.text_color_disabled \
+        if self.text_color_disabled else \
+        (self.theme_cls.onSurfaceColor \
+        )[:-1] + [self.disabled_fg_opacity]
+
+
+<FIcon>
+    state_effect: False
+    font_size:
+        self.theme_cls.font_styles[self.font_style][self.role]["font-size"] \
+        if self.theme_font_size == "Primary" else self.font_size
+    font_name:
+        self.theme_cls.font_styles[self.font_style][self.role]["font-name"] \
+        if self.theme_font_name == "Primary" else self.font_name
+    
+    source: None if self.icon in md_icons else self.icon
+    text:
+        ( \
+        u"{}".format(md_icons[self.icon]) \
+        if self.icon in md_icons else \
+        "blank" \
+        ) \
+        if self.font_name == "Icons" else self.icon
+    
+    color:
+        self.icon_color \
+        if self.theme_icon_color == 'Custom' \
+        and self.icon_color else \
+        self.theme_cls.onSurfaceVariantColor
+
+    disabled_color:
+        self.icon_color_disabled if \
+        self.icon_color_disabled else \
+        (self.theme_cls.onSurfaceVariantColor \
+        )[:-1] + [self.disabled_fg_opacity]
+
+
+<FBadge>
+    font_style: "Label"
+    role: "small"
+    radius: [self.texture_size[1] / 2, ]
+    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+    padding: "4dp", "2dp"
+    halign: "center"
+    valign: "center"
+    adaptive_size: True
+    md_bg_color: self.theme_cls.errorColor
+    theme_text_color: 'Custom'
+    text_color: self.theme_cls.onErrorColor
+    size_hint: None, None
+    size: self.texture_size
+    pos:
+        ( \
+        self.parent.x + (self.parent.width / 2), \
+        self.parent.y + (self.parent.height / 2) \
+        ) \
+        if self.parent else (0, 0)

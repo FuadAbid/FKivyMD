@@ -1,0 +1,26 @@
+<FDivider>
+    size_hint_x: 
+        None if self.divider_length \
+        and self.orientation == "horizontal" \
+        else self.size_hint_x
+    size_hint_y:
+        None if self.divider_length \
+        and self.orientation == "vertical" \
+        else self.size_hint_y
+    width:
+        (self.divider_length if self.divider_length else 100) \
+        if self.orientation == "horizontal" else \
+        (self.divider_thickness if self.divider_thickness else 1)
+    height:
+        (self.divider_thickness if self.divider_thickness else 1) \
+        if self.orientation == "horizontal" else \
+        (self.divider_length if self.divider_length else 100)
+    canvas:
+        Color:
+            rgba:
+                app.theme_cls.outlineVariantColor \
+                if not self.color else \
+                self.color
+        Rectangle:
+            size: self.size
+            pos: self.pos

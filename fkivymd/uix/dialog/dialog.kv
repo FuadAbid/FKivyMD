@@ -1,0 +1,79 @@
+<FDialog>
+    radius: ['28dp']
+    size_hint_max_x: "560dp"
+    size_hint_x: .75
+    pos_hint: {"center_x": .5, "center_y": .5}
+    size_hint_y: None
+    height: container.height
+    style: 'filled'
+    BoxLayout:
+        id: container
+        orientation: 'vertical'
+        spacing: root.spacing
+        padding: root.padding
+        size_hint_y: None
+        height: self.minimum_height
+
+<FDialogIcon>
+    size_hint: None, None
+    size: "24dp", "24dp"
+    theme_font_size: "Custom"
+    font_size: "24sp"
+    halign: 'center'
+    pos_hint: {'center_x': .5, 'center_y': .5}
+    icon_color:
+        self.theme_cls.secondaryColor \
+        if self.theme_icon_color == "Primary" else \
+        ( \
+        self.icon_color \
+        if self.icon_color else self.theme_cls.transparentColor \
+        )
+
+
+<FDialogHeadlineText>
+    adaptive_height: True
+    halign: "center"
+    font_style: "Headline"
+    role: "small"
+    markup: True
+    color:
+        self.theme_cls.onSurfaceColor \
+        if self.theme_text_color == "Primary" else ( \
+        self.text_color \
+        if self.text_color != self.theme_cls.transparentColor else \
+        self.theme_cls.onSurfaceColor \
+        )
+
+
+<FDialogSupportingText>
+    adaptive_height: True
+    text_size: self.width, None
+    halign: "center"
+    font_style: "Body"
+    role: "medium"
+    markup: True
+    text_color:
+        self.theme_cls.onSurfaceVariantColor \
+        if self.theme_text_color == "Primary" else ( \
+        self.text_color \
+        if self.text_color != self.theme_cls.transparentColor else \
+        self.theme_cls.onSurfaceVariantColor \
+        )
+
+
+<FDialogContentContainer>
+    size_hint_y: None
+    height: self.minimum_height
+
+
+<FDialogButtonContainer>
+    size_hint: None, None
+    size: self.minimum_size
+
+<FDialogScrim>
+    canvas.before:
+        Color:
+            rgba: self.color
+        Rectangle:
+            pos: self.pos
+            size: self.size

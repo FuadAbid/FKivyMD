@@ -1,0 +1,313 @@
+#: import FIcon fkivymd.uix.label.FIcon
+#:import md_icons kivymd.icon_definitions.md_icons
+
+<FBaseButton>
+    radius: '20dp'
+    md_bg_color:
+        ( \
+        { \
+        "elevated": self.theme_cls.surfaceContainerLowColor, \
+        "filled": self.theme_cls.primaryColor, \
+        "tonal": self.theme_cls.secondaryContainerColor, \
+        "outlined": self.theme_cls.transparentColor, \
+        "text": self.theme_cls.transparentColor, \
+        }[self.style] \
+        if self.theme_bg_color == "Primary" else self.md_bg_color
+        ) if not self.disabled else \
+        (
+        { \
+        "elevated": self.theme_cls.surfaceContainerLowColor[:-1] + [self.disabled_bg_opacity], \
+        "filled": self.theme_cls.primaryColor[:-1] + [self.disabled_bg_opacity], \
+        "tonal": self.theme_cls.secondaryContainerColor[:-1] + [self.disabled_bg_opacity], \
+        "outlined": self.theme_cls.transparentColor, \
+        "text": self.theme_cls.transparentColor, \
+        }[self.style] \
+        if not self.md_bg_color_disabled else self.md_bg_color_disabled
+        )
+    line_color:
+        ( \
+        (self.theme_cls.primaryColor \
+        if not self.disabled else \
+        self.theme_cls.primaryColor[:-1] + [self.disabled_line_opacity] \
+        ) \
+        if self.style == "outlined" else \
+        self.theme_cls.transparentColor \
+        ) \
+        if self.theme_line_color == "Primary" else self.line_color
+    elevation: self.elevation_levels[self.elevation_level]
+    # shadow_color:
+    #     ( \
+    #     ( \
+    #     self.theme_cls.shadowColor[:-1] + [1] \
+    #     if self.theme_shadow_color == "Primary" else \
+    #     self.shadow_color \
+    #     ) \
+    #     if self.style not in ["outlined", "text"] else \
+    #     self.theme_cls.transparentColor \
+    #     ) \
+    #     if not self.disabled else self.theme_cls.transparentColor
+    shadow_radius: self.radius
+    elevation_level: 1 if self.style == "elevated" else 0
+    shadow_offset: [0, -1] if self.style == "elevated" else [0, 0]
+    ripple_color: self.state_layer_color[:-1] + [self._state+.1]
+    ripple_alpha: self._state + .1
+    ripple_duration_in_slow: 0.8
+    state_effect: False if self.style == "text" else True
+    ripple_effect: False if self.style == "text" else True
+    shadow_color: 
+        self.theme_cls.transparentColor \
+        if self.style == "text" \
+        else self.shadow_color
+
+<FButton>
+    spacing: '10dp'
+    padding:
+        [ \
+        (self.spacing*(len(self.children)-self._nChild)/2), \
+        0, \
+        -(self.spacing*(len(self.children)-self._nChild)/2), \
+        0 \
+        ]
+    radius: 
+        ([self.height/2] if len(self.children) == 1 \
+        and isinstance(self.children[0], FIcon) else \
+        [dp(20)]) if self.theme_radius == "Primary" else self.radius
+
+<FButton2>
+    padding: 
+        [0, 0, dp(8), 0] \
+        if self.icon != "blank" \
+        else [0, 0, 0, 0]
+    markup: True
+    text_color:
+        ( \
+        ( \
+        {"elevated": self.theme_cls.primaryColor, \
+        "filled": self.theme_cls.onPrimaryColor, \
+        "tonal": self.theme_cls.onSecondaryContainerColor, \
+        "outlined": self.theme_cls.primaryColor, \
+        "text": self.theme_cls.primaryColor, \
+        }[self.style] \
+        ) \
+        if self.theme_text_color == 'Primary' \
+        else ((self.text_color if self.text_color else self.color)))
+    disabled_color:
+        (self.theme_cls.onSurfaceColor \
+        if not self.text_color \
+        else self.text_color)[:-1] \
+        + [self.disabled_fg_opacity] \
+        if not self.text_color_disabled \
+        else self.text_color_disabled
+    size_hint_x: None if self.theme_width == "Primary" else self.size_hint_x
+    size_hint_y: None if self.theme_height == "Primary" else self.size_hint_y
+    width: 
+        self.texture_size[0] + (self.horizontal_pad*2) - ((self.padding[0]+self.padding[2])/2) \
+        if self.theme_width == "Primary" else self.width
+    height: 
+        self.texture_size[1] + (self.vertical_pad*2) + self.padding[1] + self.padding[3] \
+        if self.theme_height == "Primary" else self.height
+    theme_font_size: 'Custom'
+    font_size: '14sp'
+    theme_font_name: 'Custom'
+    font_name: 'Roboto'
+
+<FButtonText>
+    state_effect: False
+    markup: True
+    font_style: "Label"
+    role: "large"
+    disabled: self._button.disabled if self._button else False
+    text_color:
+        ( \
+        ( \
+        ({"elevated": self.theme_cls.primaryColor, \
+        "filled": self.theme_cls.onPrimaryColor, \
+        "tonal": self.theme_cls.onSecondaryContainerColor, \
+        "outlined": self.theme_cls.primaryColor, \
+        "text": self.theme_cls.primaryColor[:-1] + [0.75] if self._button.state == "down" and not self._button.state_effect else self.theme_cls.primaryColor, \
+        }[self._button.style]) \
+        if self.theme_text_color == "Primary" and not self.disabled \
+        else (self.text_color if self.text_color else self.color)) \
+        if self._button else self.theme_cls.transparentColor)
+        
+    disabled_color:
+        (
+        (self.theme_cls.onSurfaceColor \
+        if not self.text_color \
+        else self.text_color)[:-1] \
+        + [self.disabled_fg_opacity] \
+        if not self.text_color_disabled \
+        else self.text_color_disabled
+        ) \
+        if self._button else self.theme_cls.transparentColor
+
+
+<FButtonIcon>
+    state_effect: False
+    line_height: 1.125
+    theme_font_size: 'Custom'
+    font_size: '18sp'
+    disabled: self._button.disabled if self._button else False
+    icon_color:
+        ( \
+        ( \
+        ({"elevated": self.theme_cls.primaryColor, \
+        "filled": self.theme_cls.onPrimaryColor, \
+        "tonal": self.theme_cls.onSecondaryContainerColor, \
+        "outlined": self.theme_cls.primaryColor, \
+        "text": self.theme_cls.primaryColor[:-1] + [0.75] if self._button.state == "down" and not self._button.state_effect else self.theme_cls.primaryColor, \
+        }[self._button.style]) \
+        if self.theme_icon_color == "Primary" and not self.disabled \
+        else (self.icon_color if self.icon_color else self.color)) \
+        if self._button else self.theme_cls.transparentColor)
+    disabled_color:
+        (
+        (self.theme_cls.onSurfaceColor \
+        if not self.icon_color \
+        else self.icon_color)[:-1] \
+        + [self.disabled_fg_opacity] \
+        if not self.icon_color_disabled \
+        else self.icon_color_disabled
+        ) \
+        if self._button else self.theme_cls.transparentColor
+
+<FIconButton>
+    md_bg_color: 
+        ( \
+        { \
+        "standard": self.theme_cls.transparentColor, \
+        "outlined": self.theme_cls.transparentColor, \
+        "tonal": self.theme_cls.secondaryContainerColor, \
+        "filled": self.theme_cls.primaryColor, \
+        }[self.style] \
+        if self.theme_bg_color == "Primary" else \
+        self.md_bg_color \
+        ) \
+        if not self.disabled else \
+        ( \
+        ( \
+        { \
+        "standard": self.theme_cls.transparentColor, \
+        "outlined": self.theme_cls.transparentColor, \
+        "tonal": self.theme_cls.secondaryContainerColor[:-1] + [self.disabled_bg_opacity], \
+        "filled": self.theme_cls.primaryColor[:-1] + [self.disabled_bg_opacity], \
+        }[self.style] \
+        ) \
+        if not self.md_bg_color_disabled else self.md_bg_color_disabled \
+        )
+    
+    radius: [self.height/2,]
+    #halign: "center"
+    #valign: "center"
+    size_hint: None, None
+    size: dp(40), dp(40)
+    #text_size: self.size
+    ripple_color: self.state_layer_color[:-1] + [self._state+.1]
+    ripple_alpha: self._state + .1
+    ripple_duration_in_slow: 0.8
+    line_color:
+        ( \
+        (self.theme_cls.primaryColor \
+        if self.theme_line_color == "Primary" else self.line_color \
+        ) \
+        if not self.disabled else \
+        self.theme_cls.primaryColor[:-1] + [self.disabled_line_opacity] \
+        ) \
+        if self.style == "outlined" else self.theme_cls.transparentColor
+    icon_color:
+        ( \
+        { \
+        "standard": self.theme_cls.primaryColor[:-1] + [0.75] if self.state == "down" and not self.state_effect else self.theme_cls.primaryColor, \
+        "tonal": self.theme_cls.onSecondaryContainerColor, \
+        "filled": self.theme_cls.onPrimaryColor, \
+        "outlined": self.theme_cls.primaryColor, \
+        }[self.style] \
+        if self.theme_icon_color == "Primary" else \
+        ( \
+        self.icon_color \
+        if self.icon_color else self.theme_cls.transparentColor \
+        ) \
+        )
+    disabled_color:
+        (self.theme_cls.onSurfaceVariantColor \
+        if not self.icon_color \
+        else self.icon_color)[:-1] \
+        + [self.disabled_fg_opacity] \
+        if not self.icon_color_disabled \
+        else self.icon_color_disabled
+    state_effect: False if self.style == "standard" else True
+    ripple_effect: False if self.style == "standard" else True
+
+
+<FSpeedDialButton>
+    font_size:
+        self.theme_cls.font_styles["Icon"][self.role]["font-size"] \
+        if self.theme_font_size == "Primary" else self.font_size
+    font_name:
+        self.theme_cls.font_styles["Icon"][self.role]["font-name"] \
+        if self.theme_font_name == "Primary" else self.font_name
+    source: None if self.icon in md_icons else self.icon
+    text:
+        ( \
+        u"{}".format(md_icons[self.icon]) \
+        if self.icon in md_icons else \
+        "blank" \
+        ) \
+        if self.font_name == "Icons" else self.icon
+    color: 
+        self.icon_color \
+        if self.icon_color else \
+        self.theme_cls.onSurfaceVariantColor
+    md_bg_color:
+        (((self.theme_cls.primaryColor
+        if not self._sub_master.button_bg_color else \
+        self._sub_master.button_bg_color) \
+        if not self.disabled else \
+        self._md_bg_color[:-1] + [self.disabled_bg_opacity]) \
+        if not self._sub_master.button_bg_color_disabled \
+        else self._sub_master.button_bg_color_disabled) \
+        if self._sub_master else self.theme_cls.transparentColor
+    radius: [self.height/2,]
+    size_hint: None, None
+    size: dp(40), dp(40)
+    ripple_color: self.state_layer_color[:-1] + [self._state+.1]
+    ripple_alpha: self._state + .1
+    ripple_duration_in_slow: 0.8
+    icon_color:
+        (self.theme_cls.onPrimaryColor \
+        if not self._sub_master.button_icon_color \
+        else self._sub_master.button_icon_color) \
+        if self._sub_master else \
+        self.theme_cls.transparentColor
+    disabled_color:
+        ((self.theme_cls.onPrimaryColor \
+        if not self._sub_master.button_icon_color \
+        else self._sub_master.button_icon_color)[:-1] \
+        + [self.disabled_fg_opacity] \
+        if not self._sub_master.button_icon_color_disabled \
+        else self._sub_master.button_icon_color_disabled) \
+        if self._sub_master else \
+        self.theme_cls.transparentColor
+    elevation_level:
+        (1 if self._sub_master.hint_animation else 0) \
+        if self._sub_master else 0
+    _padding: self._sub_master._padding if self._sub_master else 0
+
+
+<FSpeedDialHintText>
+    adaptive_size: True
+    text_color: 
+        ((self.theme_cls.onPrimaryColor \
+        if self.parent._sub_master.hint_animation
+        else self.theme_cls.primaryColor) \
+        if not self.parent._sub_master.hint_text_color \
+        else self.parent._sub_master.hint_text_color) \
+        if self.parent and self.parent._sub_master else \
+        self.theme_cls.transparentColor
+    disabled_color: 
+        self.parent._sub_master.hint_text_color_disabled \
+        if self.parent._sub_master.hint_text_color_disabled \
+        else (self.theme_cls.onSurfaceColor \
+        if not self.parent._sub_master.hint_text_color \
+        else self.parent._sub_master.hint_text_color)[:-1] \
+        + [self.disabled_fg_opacity]

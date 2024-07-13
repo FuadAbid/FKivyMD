@@ -1,0 +1,23 @@
+<FTopAppBar>
+    md_bg_color: 
+        (self.theme_cls.onSecondaryColor \
+        if self.theme_cls.theme_style == "Dark" \
+        else self.theme_cls.secondaryContainerColor \
+        ) \
+        if self.theme_bg_color == "Primary" \
+        else self.md_bg_color
+    size_hint_y: None
+    height: '64dp'
+    spacing: '4dp'
+    padding: "16dp"
+    pos_hint: {'top': 1}
+
+<FTopAppBarTitle>
+    font_style: 'Title'
+    role: 'large'
+    fixed_size: True
+    valign: 'center'
+    padding: '12dp'
+
+<FTopAppBarIcon>
+    pos_hint: {'center_y': .5}

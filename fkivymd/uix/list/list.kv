@@ -1,0 +1,120 @@
+<FList>
+    cols: 
+        1 if self.rows is None \
+        else None
+    adaptive_height: True
+    padding: 0, self._list_vertical_padding
+
+<FListItem>
+    padding: "16dp", "12dp"
+    md_bg_color:
+        self.theme_cls.surfaceColor \
+        if self.theme_bg_color == "Primary" else \
+        self.md_bg_color
+    spacing: "16dp"
+    size_hint_y: None
+    height:
+        { \
+        0: "100dp", \
+        1: "56dp", \
+        2: "72dp", \
+        3: "88dp", \
+        } \
+        [len(text_container.children)]
+
+    # Divider.
+    canvas.after:
+        Color:
+            rgba:
+                ( \
+                ( \
+                self.theme_cls.surfaceVariantColor \
+                if not self.disabled else \
+                self.theme_cls.onSurfaceColor \
+                ) \
+                if self.theme_divider_color == "Primary" else \
+                self.divider_color
+                ) \
+
+                if self.divider else self.theme_cls.transparentColor
+        Line:
+            width: 1
+            points: self.x ,self.y, self.x + self.width, self.y
+
+    FListLeadingContainer:
+        id: leading_container
+        size_hint_x: None
+        width: self.minimum_width
+        on_children: self.children[0].pos_hint = {'center_y': .5}
+    FListTextContainer:
+        id: text_container
+        orientation: 'vertical'
+        spacing: '2dp'
+    FListTrailingContainer:
+        id: trailing_container
+        size_hint_x: None
+        width: self.minimum_width
+        on_children: self.children[0].pos_hint = {'center_y': .5}
+
+
+<FListItemLeadingText>
+    theme_font_size: 'Custom'
+    font_size: '20dp'
+    size_hint: None, None
+    size: "40dp", "40dp"
+    radius: self.height/2
+    halign: 'center'
+    md_bg_color: self.theme_cls.secondaryContainerColor
+    text_color: self.theme_cls.onSecondaryContainerColor
+    theme_line_color: 'Custom'
+    line_color: self.theme_cls.secondaryContainerColor
+    ripple_color: self.theme_cls.primaryColor
+    ripple_alpha: .2
+
+
+<ListBaseText>
+    markup: True
+    shorten_from: "right"
+    font_style: "Body"
+    role: "medium"
+    shorten: True
+    adaptive_width: True
+    text_color:
+        self.theme_cls.onSurfaceVariantColor \
+        if root.theme_text_color == "Primary" else \
+        ( \
+        root.text_color \
+        if root.text_color else \
+        self.theme_cls.onSurfaceVariantColor \
+        )
+
+
+<FListItemHeadlineText>
+    role: 'large'
+    bold: True
+    text_color:
+        self.theme_cls.onSurfaceColor \
+        if root.theme_text_color == "Primary" \
+        and not root.text_color \
+        else root.text_color
+    adaptive_height: True
+
+
+<FListItemTrailingText>
+    font_style: 'Label'
+    role: 'small'
+    adaptive_width: True
+
+
+<FListItemLeadingAvatar>
+    size_hint: None, None
+    size: "40dp", "40dp"
+    radius: self.height / 2
+    md_bg_color:
+        self.theme_cls.primaryContainerColor \
+        if not self.disabled else \
+        self.theme_cls.onSurfaceColor[:-1] \
+        + ( \
+        [0.38] \
+        if self._list_item else [0] \
+        )
