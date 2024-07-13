@@ -1,63 +1,46 @@
 """
-Changes between MDButton and FButton
-------------------------------------
+Button
+======
 
-<To use button widgets in kv file, `import FKivyMD` in your program>
+Differences between MDButton and FButton
+-----------------------------------------
 
-- Blurry text bug fixed
-Sometime button text look blurry in MDButton,
-but FButton solves this problem
+1. Change order of text and icon:
 
+You can put icon to right instead of left by just
+creating it after creating text. You can even change
+orientation to vertical, and then they will be 
+placed vertically (simply you can do things like BoxLayout)
 
-- Vertical positioned sub widgets: (by orientation)
+Example::
+
+    # icon to right
     FButton:
-        orientation: 'vertical'
+        FButtonText:
+            text: 'Navigate'
+        FButtonIcon:
+            icon: 'navigation'
+
+    # vertical button
+    FButton:
         FButtonIcon:
             icon: 'navigation'
         FButtonText:
             text: 'Navigate'
 
 
-- Order of the sub widgets matter:
-ex.
-(MDButton)
-    MDButton:
-        MDButtonText:
-            text: 'Navigate'
-        MDButtonIcon:
-            icon: 'navigation'
+2. Adaptability with any size unlike MDButton:
+
+You can change width and height of FButton and 
+it will position its components accordingly. You
+don't have to sweat to figure out how to change 
+components positions so that they can appear in 
+center like in MDButton.
+
+Example::
 
     MDButton:
-        MDButtonIcon:
-            icon: 'navigation'
-        MDButtonText:
-            text: 'Navigate'   # same result as before
-
-(FButton)
-    FButton:
-        FButtonText:
-            text: 'Navigate'
-        FButtonIcon:
-            icon: 'navigation'  # icon to the right / bottom(orientation=vertical)
-
-    FButton:
-        FButtonIcon:
-            icon: 'navigation'
-        FButtonText:
-            text: 'Navigate'   # text to the right / bottom(orientation=vertical)
-
-
-- Custom size problem solved
-If user wants to set custom width for button, for MDButton it
-sticks to left position and user needs to mess with positions 
-of the sub widgets to position those in center and that may not 
-even work when window is resized. But with FButton user can set 
-any custom width and sub widgets will be positioned in center 
-automatically.
-ex.
-(MDButton)
-    MDButton:
-        theme_width: "Custom"
+        theme_width: 'Custom'
         size_hint_x: .5
         MDButtonIcon:
             x: text.x - (self.width + dp(10)) # to fix position
@@ -67,7 +50,6 @@ ex.
             text: "Add Item"
             pos_hint: {"center_x": .5, "center_y": .5} # to fix position
 
-(FButton)
     FButton:
         theme_width: 'Custom'
         size_hint_x: .5
@@ -77,38 +59,51 @@ ex.
             text: 'Add Item'
 
 
-- Change side paddings and space between text and icon:
+3. Change side paddings and space between text and icon:
+Note: use dp(n) instead of 'ndp'
+
+Example::
+
     FButton:
-        horizontal_pad: '30dp'
-        vertical_pad: '25dp'
-        spacing: '10dp'
+        horizontal_pad: dp(30)
+        vertical_pad: dp(25)
+        spacing: dp(30)
         FButtonIcon:
             icon: 'plus'
         FButtonText:
             text: 'Add Item'
 
             
-- Change in modifying radius:
-(MDButton)
-    MDButton:
-        radius: 0
+4. Change in modifying radius:
+You need to set :attr:`theme_radius` to `True`
+to change radius
 
-(FButton)
+Example::
     FButton:
         theme_radius: 'Custom'
         radius: 0
 
 
-- Ripple color matching with button color:
+5. Ripple color matching with button color:
 Unlike for MDButton having a constant grey ripple color,
 FButton ripple color matches with theme and button color
 
 
-- Can be used as FIconButton:
-(though it's recommended to use FIconButton)
+6. Last but not the least...
+FButton can also be used as FIconButton, but it's
+always recommended to use FIconButton for that purpose
+(You can use this if you want elevated IconButton)
+
+Example::
     FButton:
         FButtonIcon:
             icon: 'heart-outline'
+
+
+For more information about how to work with
+Button and change it's attributes, see::
+
+`KivyMD MDButton <https://kivymd.readthedocs.io/en/latest/components/button/>`
 """
 
 from __future__ import annotations
